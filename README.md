@@ -161,6 +161,10 @@ href="https://home.akirax.net"><img src="https://raw.githubusercontent.com/The-K
 <img src="https://contrib.rocks/image?repo=The-King-Destroy/YukiBot-MD" /> 
 </a>
 
+### **`ꕥ Agradecimientos`**
+[![Carlos](https://github.com/AzamiJs.png?size=100)](https://github.com/AzamiJs)
+[![ZyxlJs](https://github.com/DevZyxlJs.png?size=120)](https://zyxljs.stellarwa.xyz)
+
 ### **`ᥫ᭡ Propietario`**
 <a
 href="https://github.com/The-King-Destroy"><img src="https://github.com/The-King-Destroy.png" width="130" height="130" alt="
