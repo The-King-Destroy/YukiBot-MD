@@ -142,7 +142,7 @@ cd && cd YukiBot-MD && nano settings.js
 ### **`✦ AKIRAX ✦`**
 
 <a
-href="https://home.akirax.net"><img src="https://raw.githubusercontent.com/The-King-Destroy/Adiciones/main/Contenido/1748713078525.jpeg" height="125px"></a>
+href="https://home.akirax.net"><img src="https://o.uguu.se/mfnuwWzC.jpeg" height="125px"></a>
 
 <details>
 <summary><b> ❒ Servidor Akirax</b></summary>
