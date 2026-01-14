@@ -26,7 +26,7 @@ Extensiones adicionales
 
 ### **`✧ Click en la imagen para descargar termux ✧`**
 <a
-href="https://www.mediafire.com/file/wkinzgpb0tdx5qh/com.termux_1022.apk/file"><img src="https://qu.ax/finc.jpg" height="125px"></a> 
+href="https://www.mediafire.com/file/wkinzgpb0tdx5qh/com.termux_1022.apk/file"><img src="https://n.uguu.se/UrdJCtLB.jpeg" height="125px"></a> 
 
 ### **`➮ Instalación por termux`**
 <details>
@@ -126,35 +126,15 @@ cd && cd YukiBot-MD && nano settings.js
 <summary><b> 🜸 Enlaces Oficiales </b></summary>
 
  * Canal Oficial  [`¡Click aquí!`](https://whatsapp.com/channel/0029Vb64nWqLo4hb8cuxe23n)
-* Grupo Oficial [`¡Click aquí!`](https://chat.whatsapp.com/HaKf6ezcwdbGzmH782eBal)
-* Comunidad Oficial [`¡Click aquí!`](https://chat.whatsapp.com/BgIcqDiiTEmL5ChFpq76y0?mode=ems_copy_t)
+* Grupo Oficial [`¡Click aquí!`](https://chat.whatsapp.com/K3RaHnkUZ2XDqGe6drJFoK)
+* Comunidad Oficial [`¡Click aquí!`](https://chat.whatsapp.com/BgIcqDiiTEmL5ChFpq76y0)
 </details>
 
 <details>
 <summary><b> ✰ Contáctos</b></summary>
 
-* WhatsApp: [`Aquí`](https://wa.me/522202410659)
+* WhatsApp: [`Aquí`](https://wa.me/573196588149)
 * Correo: [`Aquí`](thekingdestroy507@gmail.com)
-</details>
-
----
-
-### **` °¤ BOXMINEWORLD ¤°`**
-
-<a href="https://boxmineworld.com">
-  <img width="125px" src="https://i.imgur.com/allAyd4.png"/>
-</a>
-
-<details>
- <summary><b> ❒ Servidor BoxMineWorld</b></summary>
-
-* Pagina Oficial: [`Boxmineworld`](https://boxmineworld.com)
-* Tutorial - Crear cuenta en la Dashboard: [`Dashboard`](https://www.youtube.com/watch?v=ZAwBLuNmIlI)
-* Dashboard: [`Dash`](https://dash.boxmineworld.com)
-* Panel: [`Aquí`](https://panel.boxmineworld.com)
-* Dudas sobre el Host: [`Discord`](https://discord.gg/84qsr4v)
-* Canal de WhatsApp: [`Aquí`](https://whatsapp.com/channel/0029Va71C1q2UPBOICnxu83r)
-
 </details>
 
 ---
@@ -177,8 +157,8 @@ href="https://home.akirax.net"><img src="https://raw.githubusercontent.com/The-K
 ---
 
 ### **`❀ Colaboradores`**
-<a href="https://github.com/The-King-Destroy/Yuki_Suou-Bot/graphs/contributors">
-<img src="https://contrib.rocks/image?repo=The-King-Destroy/Yuki_Suou-Bot" /> 
+<a href="https://github.com/The-King-Destroy/YukiBot-MD/graphs/contributors">
+<img src="https://contrib.rocks/image?repo=The-King-Destroy/YukiBot-MD" /> 
 </a>
 
 ### **`ᥫ᭡ Propietario`**
