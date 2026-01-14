@@ -1,5 +1,4 @@
 import { search, download } from 'aptoide-scraper'
-import sharp from "sharp"
 import { getBuffer } from "../../lib/message.js"
 
 export default {
@@ -29,10 +28,8 @@ export default {
       if (sizeBytes > 524288000) {
         return m.reply(`《✧》 El archivo es demasiado grande (${size}).\n> Descárgalo directamente desde aquí:\n${downloadUrl}`)
       }
-     // await client.sendFile(m.chat, icon, 'thumbnail.jpg', caption, m)
-        const thumbBuffer2 = await sharp(await getBuffer(icon)).resize(300, 300).jpeg({ quality: 80 }).toBuffer()
-      await client.sendMessage(m.chat, { document: { url: downloadUrl }, mimetype: 'application/vnd.android.package-archive', fileName: `${name}.apk`, jpegThumbnail: thumbBuffer2, caption }, { quoted: m })
-    } catch (e) {
+      await client.sendMessage(m.chat, { document: { url: downloadUrl }, mimetype: 'application/vnd.android.package-archive', fileName: `${name}.apk`, caption }, { quoted: m })
+     } catch (e) {
       await m.reply(`> An unexpected error occurred while executing command *${usedPrefix + command}*. Please try again or contact support if the issue persists.\n> [Error: *${e.message}*]`)
     }
   },
