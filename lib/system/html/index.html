@@ -1,0 +1,2392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Dashboard — Yuki</title>
+<link rel="shortcut icon" href="/favicon.ico">
+<meta property="og:title" content="Home - Yuki Wa" />
+<meta name="description" content="Yuki Wa" />
+<meta property="og:image" content="/favicon.ico">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+    --stellar-red: #FF2E63;
+    --stellar-purple: #7D5FFF;
+    --stellar-blue: #00C9FF;
+    --stellar-cyan: #3DECB1;
+    --stellar-yellow: #FFC107;
+    --stellar-dark: #1A1B26;
+    --stellar-darker: #12121C;
+    --stellar-light: #252836;
+    --stellar-gray: #8A8F98;
+    --stellar-light-gray: #E4E7EC;
+}
+
+body {
+    min-height: 100vh;
+    color: var(--stellar-light-gray);
+    background-color: var(--stellar-darker);
+    background-image: 
+        radial-gradient(circle at 50% 50%, rgba(255, 46, 99, 0.1) 0%, rgba(125, 95, 255, 0.05) 50%, rgba(0, 201, 255, 0.02) 100%),
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: cover, 40px 40px, 40px 40px;
+    overflow-x: hidden;
+}
+
+.glass-morphism {
+    background: rgba(26, 27, 38, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nav-glass {
+    background: rgba(26, 27, 38, 0.8);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.nav-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-logo {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: 2px solid var(--stellar-dark);
+    background: linear-gradient(to tr, var(--stellar-red), var(--stellar-purple));
+    padding: 2px;
+}
+
+.nav-logo img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.nav-title h1 {
+    font-size: 1.5rem;
+    font-weight: 900;
+    background: linear-gradient(to right, var(--stellar-red), var(--stellar-purple), var(--stellar-blue));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.nav-title span {
+    font-size: 0.7rem;
+    color: var(--stellar-gray);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.nav-toggle-btn {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background-color: var(--stellar-light);
+    border: none;
+    color: var(--stellar-red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.nav-toggle-btn:hover {
+    transform: rotate(15deg) scale(1.1);
+    box-shadow: 0 0 15px rgba(255, 46, 99, 0.3);
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: 55;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+#overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+#sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 18rem;
+    height: 100vh;
+    background-color: var(--stellar-dark);
+    z-index: 60;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+#sidebar.active {
+    transform: translateX(0);
+}
+
+.sidebar-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sidebar-header h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--stellar-light-gray);
+}
+
+.sidebar-close-btn {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background-color: var(--stellar-light);
+    border: none;
+    color: var(--stellar-red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sidebar-close-btn:hover {
+    background-color: var(--stellar-red);
+    color: var(--stellar-light-gray);
+}
+
+.sidebar-user {
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.user-avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: linear-gradient(to br, var(--stellar-blue), var(--stellar-purple));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--stellar-light-gray);
+    font-size: 1rem;
+}
+
+.user-info p {
+    font-size: 0.7rem;
+    color: var(--stellar-gray);
+}
+
+.user-info h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--stellar-light-gray);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sidebar-nav {
+    flex: 1;
+    padding: 1rem 0;
+    overflow-y: auto;
+}
+
+.nav-btn {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: transparent;
+    border: none;
+    color: var(--stellar-gray);
+    text-align: left;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.nav-btn:hover {
+    background-color: var(--stellar-light);
+    color: var(--stellar-light-gray);
+}
+
+.nav-btn.active-nav-item {
+    background-color: var(--stellar-light);
+    color: var(--stellar-red);
+    box-shadow: 0 0 10px rgba(255, 46, 99, 0.15);
+}
+
+.nav-btn i {
+    font-size: 1.2rem;
+    width: 1.2rem;
+    text-align: center;
+}
+
+.sidebar-footer {
+    padding: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-footer-btn {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid rgba(255, 46, 99, 0.3);
+    border-radius: 0.5rem;
+    background: transparent;
+    color: var(--stellar-red);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.sidebar-footer-btn:hover {
+    background-color: var(--stellar-red);
+    color: var(--stellar-light-gray);
+    border-color: var(--stellar-red);
+}
+
+main {
+    padding-top: 7rem;
+    padding-bottom: 3rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    max-width: 75rem;
+    margin: 0 auto;
+}
+
+.section {
+    display: none;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.section.active {
+    display: flex;
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-section {
+    padding: 3rem 2rem;
+    border-radius: 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.hero-bg-blur-1 {
+    position: absolute;
+    top: -5rem;
+    right: -5rem;
+    width: 30rem;
+    height: 30rem;
+    background-color: var(--stellar-red);
+    opacity: 0.1;
+    border-radius: 50%;
+    filter: blur(60px);
+}
+
+.hero-bg-blur-2 {
+    position: absolute;
+    bottom: -5rem;
+    left: -5rem;
+    width: 30rem;
+    height: 30rem;
+    background-color: var(--stellar-purple);
+    opacity: 0.1;
+    border-radius: 50%;
+    filter: blur(60px);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+}
+
+.hero-content img {
+    width: 100%;
+    max-width: 20rem;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+}
+
+.hero-content h2 {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--stellar-light-gray);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.hero-content h2 span {
+    background: linear-gradient(to right, var(--stellar-red), var(--stellar-purple), var(--stellar-blue));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.hero-content p {
+    font-size: 1rem;
+    color: var(--stellar-gray);
+    line-height: 1.6;
+    max-width: 30rem;
+    margin: 0 auto 2rem auto;
+}
+
+.hero-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn {
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--stellar-red) 0%, var(--stellar-purple) 100%);
+    color: var(--stellar-light-gray);
+    box-shadow: 0 0 20px rgba(255, 46, 99, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 30px rgba(255, 46, 99, 0.5);
+}
+
+.btn-secondary {
+    background-color: var(--stellar-light);
+    color: var(--stellar-light-gray);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 20px rgba(125, 95, 255, 0.3);
+    background-color: var(--stellar-dark);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.feature-card {
+    padding: 2rem;
+    border-radius: 1rem;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.feature-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.feature-icon.red { background-color: rgba(255, 46, 99, 0.2); color: var(--stellar-red); }
+.feature-icon.purple { background-color: rgba(125, 95, 255, 0.2); color: var(--stellar-purple); }
+.feature-icon.blue { background-color: rgba(0, 201, 255, 0.2); color: var(--stellar-blue); }
+.feature-icon.cyan { background-color: rgba(61, 236, 177, 0.2); color: var(--stellar-cyan); }
+.feature-icon.yellow { background-color: rgba(255, 193, 7, 0.2); color: var(--stellar-yellow); }
+
+.feature-card h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--stellar-light-gray);
+    margin-bottom: 1rem;
+}
+
+.feature-card p {
+    font-size: 0.9rem;
+    color: var(--stellar-gray);
+    line-height: 1.6;
+}
+
+.protection-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.protection-card {
+    padding: 2rem;
+    border-radius: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.protection-card .card-bg-blur {
+    position: absolute;
+    width: 20rem;
+    height: 20rem;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.1;
+}
+
+.protection-card.cyan .card-bg-blur {
+    background-color: var(--stellar-cyan);
+    top: -5rem;
+    right: -5rem;
+}
+
+.protection-card.purple .card-bg-blur {
+    background-color: var(--stellar-purple);
+    bottom: -5rem;
+    left: -5rem;
+}
+
+.protection-card-content {
+    position: relative;
+    z-index: 10;
+}
+
+.protection-card-content h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--stellar-light-gray);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.protection-card-content .title-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.protection-card.cyan .title-icon {
+    background-color: rgba(61, 236, 177, 0.2);
+    color: var(--stellar-cyan);
+}
+
+.protection-card.purple .title-icon {
+    background-color: rgba(125, 95, 255, 0.2);
+    color: var(--stellar-purple);
+}
+
+.protection-card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.protection-card ul li {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: var(--stellar-gray);
+    line-height: 1.6;
+}
+
+.protection-card ul li .check-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+}
+
+.protection-card.cyan .check-icon {
+    background-color: rgba(61, 236, 177, 0.1);
+    color: var(--stellar-cyan);
+}
+
+.protection-card.purple .check-icon {
+    background-color: rgba(125, 95, 255, 0.1);
+    color: var(--stellar-purple);
+}
+
+.cta-section {
+    padding: 3rem 2rem;
+    border-radius: 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-bg-blur {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(255, 46, 99, 0.1) 0%, transparent 70%);
+    z-index: 1;
+}
+
+.cta-content {
+    position: relative;
+    z-index: 10;
+}
+
+.cta-content h3 {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--stellar-light-gray);
+    margin-bottom: 1.5rem;
+    background: linear-gradient(to right, var(--stellar-red), var(--stellar-purple), var(--stellar-blue));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.cta-content p {
+    font-size: 0.9rem;
+    color: var(--stellar-gray);
+    line-height: 1.6;
+    max-width: 30rem;
+    margin: 0 auto 2rem auto;
+}
+
+.user-badge-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    background-color: var(--stellar-light);
+    border-radius: 2rem;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 2rem;
+}
+
+.user-avatars {
+    display: flex;
+    align-items: center;
+}
+
+.user-avatars img {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--stellar-dark);
+    margin-left: -0.5rem;
+}
+
+.user-avatars img:first-child {
+    margin-left: 0;
+}
+
+.user-avatars .avatar-more {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: linear-gradient(to right, var(--stellar-red), var(--stellar-purple));
+    color: var(--stellar-light-gray);
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--stellar-dark);
+    margin-left: -0.5rem;
+}
+
+.user-badge-container span {
+    font-size: 0.8rem;
+    color: var(--stellar-gray);
+}
+
+.create-section, .list-section {
+    max-width: 35rem;
+    margin: 0 auto;
+}
+
+.section-header {
+    padding: 2rem;
+    border-radius: 1rem 1rem 0 0;
+    background: linear-gradient(to right, var(--stellar-red), var(--stellar-purple));
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.section-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.section-header-content {
+    position: relative;
+    z-index: 10;
+}
+
+.section-header-content h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--stellar-light-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.section-header-content p {
+    font-size: 0.9rem;
+    color: var(--stellar-light-gray);
+    opacity: 0.8;
+    margin-top: 0.5rem;
+}
+
+.form-container {
+    padding: 2rem;
+    border-radius: 0 0 1rem 1rem;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--stellar-gray);
+    margin-bottom: 0.5rem;
+    margin-left: 0.25rem;
+}
+
+.form-group .input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 2.5rem;
+    font-size: 1.2rem;
+    color: var(--stellar-gray);
+    transition: color 0.3s ease;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3.5rem;
+    border-radius: 0.75rem;
+    background-color: var(--stellar-light);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--stellar-light-gray);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: var(--stellar-red);
+    box-shadow: 0 0 10px rgba(255, 46, 99, 0.2);
+}
+
+.form-group input:focus + .input-icon {
+    color: var(--stellar-red);
+}
+
+.code-area {
+    display: none;
+    margin-top: 2rem;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background-color: var(--stellar-darker);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    text-align: center;
+}
+
+.code-area-header {
+    padding: 1rem;
+    background-color: var(--stellar-dark);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.code-dots {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+}
+
+.dot.red { background-color: var(--stellar-red); }
+.dot.yellow { background-color: var(--stellar-yellow); }
+.dot.cyan { background-color: var(--stellar-cyan); }
+
+.code-area-header span {
+    font-size: 0.7rem;
+    color: var(--stellar-gray);
+    font-family: monospace;
+}
+
+.code-area-header .timer {
+    margin-left: auto;
+    font-size: 0.7rem;
+    color: var(--stellar-gray);
+}
+
+.code-display {
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    background: radial-gradient(circle at center, rgba(255, 46, 99, 0.05) 0%, transparent 70%);
+    border-radius: 0.5rem;
+}
+
+.code-display h4 {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--stellar-red);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1.5rem;
+}
+
+.code-display #code-display {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--stellar-light-gray);
+    font-family: monospace;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border: 1px dashed rgba(255, 46, 99, 0.3);
+    border-radius: 0.5rem;
+    background-color: rgba(26, 27, 38, 0.8);
+}
+
+.code-display p {
+    font-size: 0.8rem;
+    color: var(--stellar-gray);
+    margin-bottom: 1.5rem;
+}
+
+.copy-btn {
+    padding: 0.75rem 1.5rem;
+    background-color: rgba(125, 95, 255, 0.2);
+    color: var(--stellar-purple);
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+    background-color: rgba(125, 95, 255, 0.3);
+}
+
+.list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+}
+
+.list-header h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--stellar-light-gray);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.bot-count-badge {
+    padding: 0.5rem 1rem;
+    background-color: rgba(255, 46, 99, 0.2);
+    color: var(--stellar-red);
+    border-radius: 2rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.refresh-btn {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background-color: var(--stellar-light);
+    border: none;
+    color: var(--stellar-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.refresh-btn:hover {
+    color: var(--stellar-light-gray);
+    background-color: var(--stellar-dark);
+}
+
+.bots-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+.bot-card {
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    width: 100%;
+    max-width: 30rem;
+    margin: 0 auto;
+}
+
+.bot-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.bot-card-header {
+    height: 8rem;
+    background-color: var(--stellar-dark);
+    position: relative;
+    overflow: hidden;
+}
+
+.bot-card-header img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.8;
+    transition: transform 0.7s ease;
+}
+
+.bot-card:hover .bot-card-header img {
+    transform: scale(1.1);
+}
+
+.bot-card-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, var(--stellar-dark) 0%, transparent 100%);
+}
+
+.bot-type-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: rgba(26, 27, 38, 0.8);
+    color: var(--stellar-light-gray);
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    z-index: 10;
+}
+
+.bot-card-body {
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    position: relative;
+}
+
+.bot-avatar {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 0.75rem;
+    object-fit: cover;
+    border: 3px solid var(--stellar-dark);
+    position: absolute;
+    top: -2rem;
+    left: 1.5rem;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.bot-card-body h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--stellar-light-gray);
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+}
+
+.bot-phone {
+    font-size: 0.8rem;
+    color: var(--stellar-gray);
+    font-family: monospace;
+    margin-bottom: 1rem;
+}
+
+.last-update {
+    font-size: 0.7rem;
+    color: var(--stellar-gray);
+    margin-bottom: 1.5rem;
+}
+
+.bot-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.tag {
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.tag.blue {
+    background-color: rgba(0, 201, 255, 0.2);
+    color: var(--stellar-blue);
+}
+
+.tag.purple {
+    background-color: rgba(125, 95, 255, 0.2);
+    color: var(--stellar-purple);
+}
+
+.tag.cyan {
+    background-color: rgba(61, 236, 177, 0.2);
+    color: var(--stellar-cyan);
+}
+
+.bot-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.action-btn.edit {
+    background-color: var(--stellar-light);
+    color: var(--stellar-light-gray);
+}
+
+.action-btn.edit:hover {
+    background-color: var(--stellar-dark);
+    box-shadow: 0 0 15px rgba(0, 201, 255, 0.2);
+}
+
+.action-btn.delete {
+    background-color: rgba(255, 46, 99, 0.2);
+    color: var(--stellar-red);
+}
+
+.action-btn.delete:hover {
+    background-color: rgba(255, 46, 99, 0.3);
+    box-shadow: 0 0 15px rgba(255, 46, 99, 0.2);
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 100;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.modal.active {
+    display: flex;
+    animation: modalFadeIn 0.3s ease-out forwards;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background-color: var(--stellar-dark);
+    border-radius: 1.5rem;
+    width: 100%;
+    max-width: 30rem;
+    overflow: hidden;
+    transform: scale(0.95);
+    transition: transform 0.3s ease-out;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.modal.active .modal-content {
+    transform: scale(1);
+}
+
+.modal-header {
+    height: 10rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-header img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.8;
+    transition: transform 0.7s ease;
+}
+
+.modal-content:hover .modal-header img {
+    transform: scale(1.05);
+}
+
+.modal-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, var(--stellar-dark) 0%, transparent 100%);
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background-color: rgba(26, 27, 38, 0.8);
+    border: none;
+    color: var(--stellar-light-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.modal-close-btn:hover {
+    background-color: var(--stellar-red);
+    color: var(--stellar-light-gray);
+}
+
+.modal-header-title {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--stellar-light-gray);
+    z-index: 10;
+}
+
+.modal-body {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.modal-body-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.modal-avatar-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.modal-avatar {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.75rem;
+    object-fit: cover;
+    border: 2px solid var(--stellar-red);
+}
+
+.modal-bot-id {
+    font-size: 0.8rem;
+    color: var(--stellar-gray);
+    background-color: var(--stellar-light);
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-family: monospace;
+}
+
+.modal-last-update {
+    font-size: 0.7rem;
+    background-color: rgba(0, 201, 255, 0.2);
+    color: var(--stellar-blue);
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-row label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--stellar-gray);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.form-row input {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background-color: var(--stellar-light);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--stellar-light-gray);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-row input:focus {
+    outline: none;
+    border-color: var(--stellar-red);
+    box-shadow: 0 0 10px rgba(255, 46, 99, 0.2);
+}
+
+.url-validation-icon {
+    position: absolute;
+    right: 1rem;
+    top: 3rem;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.url-valid {
+    color: var(--stellar-cyan);
+}
+
+.url-invalid {
+    color: var(--stellar-red);
+}
+
+.modal-footer {
+    padding: 1.5rem 2rem;
+    background-color: var(--stellar-light);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.modal-footer-btn {
+    padding: 1rem 1.5rem;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 0.9rem;
+}
+
+.modal-footer-btn.cancel {
+    background-color: transparent;
+    color: var(--stellar-gray);
+}
+
+.modal-footer-btn.cancel:hover {
+    color: var(--stellar-light-gray);
+}
+
+.modal-footer-btn.save {
+    background: linear-gradient(to right, var(--stellar-red), var(--stellar-purple));
+    color: var(--stellar-light-gray);
+}
+
+.modal-footer-btn.save:hover {
+    box-shadow: 0 0 20px rgba(255, 46, 99, 0.3);
+}
+
+.notification {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    background-color: var(--stellar-dark);
+    border-radius: 0.75rem;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    transform: translateX(150%);
+    transition: transform 0.3s ease-out;
+    z-index: 200;
+    border-left: 4px solid var(--stellar-red);
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    max-width: 20rem;
+}
+
+.notification.active {
+    transform: translateX(0);
+}
+
+.notification-icon {
+    font-size: 1.2rem;
+    color: var(--stellar-red);
+    margin-top: 0.2rem;
+}
+
+.notification-content h4 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--stellar-light-gray);
+    margin-bottom: 0.25rem;
+}
+
+.notification-content p {
+    font-size: 0.8rem;
+    color: var(--stellar-gray);
+    line-height: 1.4;
+}
+
+.notification-close {
+    background: transparent;
+    border: none;
+    color: var(--stellar-gray);
+    cursor: pointer;
+    transition: color 0.3s ease;
+    margin-left: 0.5rem;
+}
+
+.notification-close:hover {
+    color: var(--stellar-light-gray);
+}
+
+.hidden {
+    display: none;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.shadow-stellar-glow {
+    box-shadow: 0 0 25px rgba(255, 46, 99, 0.2);
+}
+
+@media (min-width: 48rem) {
+    .features-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .protection-section {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .bots-grid {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 60rem;
+    }
+
+    .bot-card {
+        margin: 0;
+    }
+
+    .hero-content h2 {
+        font-size: 2.5rem;
+    }
+
+    .cta-content h3 {
+        font-size: 2rem;
+    }
+
+    .code-display #code-display {
+        font-size: 3rem;
+    }
+}
+
+@media (min-width: 64rem) {
+    .bots-grid {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 75rem;
+    }
+}
+</style>
+</head>
+<body>
+<div id="overlay"></div>
+
+<nav class="nav-glass">
+    <div class="nav-logo-container">
+        <div class="nav-logo">
+            <img src="https://cdn.sockywa.xyz/files/tUDG.jpeg" alt="Wa Pro Logo">
+        </div>
+        <div class="nav-title">
+            <h1>Yuki Wa</h1>
+            <span>SubBot Manager</span>
+        </div>
+    </div>
+    <button class="nav-toggle-btn" onclick="toggleSidebar()">
+        <i class="fas fa-bars-staggered"></i>
+    </button>
+</nav>
+
+<aside id="sidebar">
+    <div class="sidebar-header">
+        <h3>Menú Principal</h3>
+        <button class="sidebar-close-btn" onclick="toggleSidebar()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="sidebar-user">
+        <div class="user-avatar">
+            <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="user-info">
+            <p>Sesión Activa</p>
+            <h4>Administrador</h4>
+        </div>
+    </div>
+    <div class="sidebar-nav">
+        <button class="nav-btn active-nav-item" onclick="switchTab('home')" id="nav-home">
+            <i class="fas fa-rocket"></i>
+            <span>Beneficios</span>
+        </button>
+        <button class="nav-btn" onclick="switchTab('create')" id="nav-create">
+            <i class="fas fa-circle-plus"></i>
+            <span>Crear SubBot</span>
+        </button>
+        <button class="nav-btn" onclick="switchTab('list')" id="nav-list">
+            <i class="fas fa-robot"></i>
+            <span>Mis SubBots</span>
+        </button>
+        <button class="nav-btn">
+            <i class="fas fa-gear"></i>
+            <span>Ajustes</span>
+        </button>
+        <button class="nav-btn">
+            <i class="fas fa-circle-question"></i>
+            <span>Ayuda</span>
+        </button>
+    </div>
+    <div class="sidebar-footer">
+        <button class="sidebar-footer-btn" onclick="toggleSidebar()">
+            <i class="fas fa-xmark"></i>
+            <span>Cerrar Menú</span>
+        </button>
+    </div>
+</aside>
+
+<main>
+    <section id="tab-home" class="section active">
+        <div class="hero-section glass-morphism">
+            <div class="hero-bg-blur-1"></div>
+            <div class="hero-bg-blur-2"></div>
+            <div class="hero-content">
+                <img src="https://cdn.sockywa.xyz/files/kH2N.jpeg" alt="Wa Hero">
+                <h2>Potencia tu WhatsApp <br> con <span>Yuki Wa</span></h2>
+                <p>La plataforma más avanzada y estable para gestionar tus SubBots. Automatización inteligente con diseño de vanguardia y sincronización en tiempo real.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="switchTab('create')">
+                        <i class="fas fa-rocket"></i>
+                        Crear Primer Bot
+                    </button>
+                    <button class="btn btn-secondary" onclick="switchTab('list')">
+                        <i class="fas fa-dashboard"></i>
+                        Ver Mis Bots
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card glass-morphism">
+                <div class="feature-icon red">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3>Velocidad Extrema</h3>
+                <p>Conexión instantánea a WhatsApp con respuestas en milisegundos. Tu bot operará sin demoras ni interrupciones.</p>
+            </div>
+            <div class="feature-card glass-morphism">
+                <div class="feature-icon purple">
+                    <i class="fas fa-shield-halved"></i>
+                </div>
+                <h3>Seguridad Total</h3>
+                <p>Protocolos anti-ban avanzados y cifrado de extremo a extremo para mantener tu número seguro 24/7.</p>
+            </div>
+            <div class="feature-card glass-morphism">
+                <div class="feature-icon blue">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+                <h3>Sincronización Real</h3>
+                <p>Cambios en cualquier dispositivo se reflejan inmediatamente. Mantén tu configuración siempre actualizada.</p>
+            </div>
+        </div>
+
+        <div class="protection-section">
+            <div class="protection-card glass-morphism cyan">
+                <div class="card-bg-blur"></div>
+                <div class="protection-card-content">
+                    <h3>
+                        <div class="title-icon">
+                            <i class="fas fa-shield-virus"></i>
+                        </div>
+                        Protección Anti-Ban
+                    </h3>
+                    <ul>
+                        <li>
+                            <div class="check-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            Simulación de uso humano para evitar detecciones automáticas.
+                        </li>
+                        <li>
+                            <div class="check-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            Actualizaciones constantes adaptadas a cambios de WhatsApp.
+                        </li>
+                        <li>
+                            <div class="check-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            Manejo inteligente de sesiones y límites de mensajes.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="protection-card glass-morphism purple">
+                <div class="card-bg-blur"></div>
+                <div class="protection-card-content">
+                    <h3>
+                        <div class="title-icon">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        Funciones Avanzadas
+                    </h3>
+                    <ul>
+                        <li>
+                            <div class="check-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            Gestión de grupos con comandos personalizables y moderación automática.
+                        </li>
+                        <li>
+                            <div class="check-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            Sistema de puntos, niveles y recompensas para usuarios activos.
+                        </li>
+                        <li>
+                            <div class="check-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            Integración con APIs externas para ampliar capacidades del bot.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-section glass-morphism">
+            <div class="cta-bg-blur"></div>
+            <div class="cta-content">
+                <h3>¿Listo para potenciar tu WhatsApp?</h3>
+                <p>Únete a miles de usuarios que ya transformaron su experiencia con WhatsApp usando Stellar Wa Pro. Crea tu primer bot en menos de 2 minutos y disfruta de todas las ventajas.</p>
+                
+                <div class="user-badge-container">
+                    <div class="user-avatars">
+                        <img src="https://github.com/Legna-Chan.png" alt="Usuario">
+                        <img src="https://github.com/GataNina-Li.png" alt="Usuario">
+                        <img src="https://github.com/CheirZ.png" alt="Usuario">
+                        <div class="avatar-more">+5k</div>
+                    </div>
+                    <span>Usuarios activos confían en nosotros</span>
+                </div>
+
+                <button class="btn btn-primary" onclick="switchTab('create')">
+                    <i class="fas fa-rocket mr-3"></i> Comenzar Ahora
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="tab-create" class="section create-section">
+        <div class="section-header">
+            <div class="section-header-content">
+                <h2><i class="fas fa-link"></i> Vincular Nuevo Dispositivo</h2>
+                <p>Ingresa tu número para recibir el código de emparejamiento seguro</p>
+            </div>
+        </div>
+
+        <div class="form-container glass-morphism">
+            <div class="form-group">
+                <label for="phoneNumber">Número de WhatsApp (con código país)</label>
+                <input type="text" id="phoneNumber" placeholder="Ej: +57 300 000 0000">
+                <i class="fas fa-phone input-icon"></i>
+            </div>
+
+            <div class="form-group">
+                <label for="botLabel">Etiqueta del Bot</label>
+                <input type="text" id="botLabel" placeholder="Ej: Mi SubBot Personalizado">
+                <i class="fas fa-tag input-icon"></i>
+            </div>
+
+            <div class="form-group">
+                <label for="botType">Tipo de Bot</label>
+                <select id="botType">
+                    <option value="subbot">SubBot</option>
+                </select>
+                <i class="fas fa-sitemap input-icon"></i>
+            </div>
+
+            <div class="form-group hidden" id="tokenField">
+                <label for="botToken">Token</label>
+                <input type="text" id="botToken" placeholder="Ingresa tu token válido de activación">
+                <i class="fas fa-key input-icon"></i>
+            </div>
+
+            <button onclick="requestCode()" id="btn-generate" class="btn btn-primary w-full">
+                <span>Generar Código de Vinculación</span>
+                <i class="fas fa-arrow-right"></i>
+            </button>
+
+            <div id="code-area" class="code-area">
+                <div class="code-area-header">
+                    <div class="code-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot cyan"></div>
+                    </div>
+                    <span>codigo-vinculacion.stellar-pro</span>
+                    <div class="timer" id="timer">Tiempo restante: 45s</div>
+                </div>
+                <div class="code-display">
+                    <h4>Código de Vinculación</h4>
+                    <div id="code-display" class="text-6xl md:text-7xl font-mono font-black text-white tracking-wider mb-6"></div>
+                    <p class="text-sm text-gray-400 mb-4">Haz clic para copiar o escanéalo desde WhatsApp > Dispositivos Vinculados</p>
+                    <button onclick="copyCode(this)" class="copy-btn">
+                        <i class="fas fa-copy mr-2"></i> Copiar Código
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tab-list" class="section list-section">
+        <div class="list-header glass-morphism">
+            <h2><i class="fas fa-robot"></i> Gestión de Bots</h2>
+            <div class="list-header-actions">
+                <div class="bot-count-badge">
+                    <i class="fas fa-server"></i>
+                    <span id="bot-count">0</span> Bots Activos
+                </div>
+                <button onclick="loadBots()" class="refresh-btn">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="bots-grid" class="bots-grid"></div>
+    </section>
+</main>
+
+<div id="modal-personalize" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <img id="modal-banner-preview" src="https://cdn.stellarwa.xyz/files/c2hA.jpeg" alt="Banner del Bot">
+            <button onclick="closeModal()" class="modal-close-btn">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="modal-header-title">Editar Configuración Avanzada</h3>
+        </div>
+
+        <div class="modal-body">
+            <div class="modal-body-header">
+                <div class="modal-avatar-container">
+                    <img id="modal-icon-preview" class="modal-avatar" src="https://cdn.stellarwa.xyz/files/nGcc.jpeg" alt="Ícono del Bot">
+                    <span id="modal-bot-tag" class="modal-bot-id">ID: 0000</span>
+                </div>
+                <span id="last-update" class="modal-last-update">Última sincronización: Actualizando...</span>
+            </div>
+
+            <div class="form-row">
+                <label for="edit-longName">Nombre Largo</label>
+                <input type="text" id="edit-longName" placeholder="Nombre completo del Bot">
+            </div>
+
+            <div class="form-row">
+                <label for="edit-shortName">Nombre Corto</label>
+                <input type="text" id="edit-shortName" placeholder="Nombre corto">
+            </div>
+
+            <div class="form-row">
+                <label for="edit-prefix">Prefijo</label>
+                <input type="text" id="edit-prefix" placeholder="Ej: !, #, ., /">
+            </div>
+
+            <div class="form-row">
+                <label for="edit-owner">Dueño</label>
+                <input type="text" id="edit-owner" value="Oculto por privacidad" placeholder="Número o nombre del dueño">
+            </div>
+
+            <div class="form-row">
+                <label for="edit-canal">Canal de WhatsApp</label>
+                <input type="text" id="edit-canal" placeholder="Enlace oficial del canal">
+            </div>
+
+            <div class="form-row">
+                <label for="edit-currency">Monedas</label>
+                <input type="text" id="edit-currency" placeholder="Moneda para el sistema de puntos">
+            </div>
+
+            <div class="form-row">
+                <label for="edit-link">Enlace Extra</label>
+                <input type="text" id="edit-link" placeholder="Enlace de grupo, web, tienda, etc.">
+            </div>
+
+            <div class="form-row">
+                <label for="edit-icon-url">URL del Ícono</label>
+                <input type="text" id="edit-icon-url" placeholder="https://ejemplo.com/icono.jpg" oninput="validateUrl(this, 'icon-preview')">
+                <i id="icon-validation" class="fas fa-circle-xmark url-validation-icon url-invalid"></i>
+            </div>
+
+            <div class="form-row">
+                <label for="edit-banner-url">URL del Banner</label>
+                <input type="text" id="edit-banner-url" placeholder="https://ejemplo.com/banner.jpg" oninput="validateUrl(this, 'banner-preview')">
+                <i id="banner-validation" class="fas fa-circle-xmark url-validation-icon url-invalid"></i>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button onclick="closeModal()" class="modal-footer-btn cancel">Cancelar</button>
+            <button onclick="saveBotConfig()" class="modal-footer-btn save">
+                <i class="fas fa-save"></i>
+                <span>Guardar y Sincronizar</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="notifications-container"></div>
+
+<script>
+const usedIds = new Set();
+let countdownInterval;
+
+function showNotification(type, title, message) {
+    const container = document.getElementById('notifications-container');
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    
+    const icons = {
+        success: 'fa-check-circle',
+        error: 'fa-exclamation-circle',
+        warning: 'fa-exclamation-triangle',
+        info: 'fa-info-circle'
+    };
+
+    notification.innerHTML = `
+        <div class="flex items-start">
+            <i class="fas ${icons[type]} notification-icon"></i>
+            <div class="notification-content">
+                <h4>${title}</h4>
+                <p>${message}</p>
+            </div>
+            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+
+    container.appendChild(notification);
+    setTimeout(() => notification.classList.add('active'), 10);
+    
+    setTimeout(() => {
+        notification.classList.remove('active');
+        setTimeout(() => notification.remove(), 500);
+    }, 5000);
+}
+
+function normalizePhoneForPairing(input) {
+    let s = String(input).replace(/\D/g, "");
+    if (!s) return "";
+    if (s.startsWith("0")) s = s.replace(/^0+/, "");
+    if (s.length === 10 && s.startsWith("3")) {
+        s = "57" + s;
+    }
+    if (s.startsWith("52") && !s.startsWith("521") && s.length >= 12) {
+        s = "521" + s.slice(2);
+    }
+    if (s.startsWith("54") && !s.startsWith("549") && s.length >= 11) {
+        s = "549" + s.slice(2);
+    }
+    return s;
+}
+
+function validateUrl(input, previewId) {
+    const url = input.value.trim();
+    const validationIcon = document.getElementById(`${input.id.split('-')[2]}-validation`);
+    const previewImg = document.getElementById(previewId);
+    
+    const urlPattern = /^(https?:\/\/).+\.(jpg|jpeg|png|gif|bmp|webp)$/i;
+    const generalUrlPattern = /^(https?:\/\/).+/i;
+
+    if (previewId === 'icon-preview' && !urlPattern.test(url)) {
+        validationIcon.className = 'fas fa-circle-xmark url-validation-icon url-invalid';
+        if (url) previewImg.src = 'https://cdn.stellarwa.xyz/files/error-icon.png';
+        else previewImg.src = 'https://cdn.stellarwa.xyz/files/default-icon.png';
+        return false;
+    }
+
+    if (previewId === 'banner-preview' && !generalUrlPattern.test(url)) {
+        validationIcon.className = 'fas fa-circle-xmark url-validation-icon url-invalid';
+        if (url) previewImg.src = 'https://cdn.stellarwa.xyz/files/error-banner.png';
+        else previewImg.src = 'https://cdn.stellarwa.xyz/files/default-banner.png';
+        return false;
+    }
+
+    const testImg = new Image();
+    testImg.onload = () => {
+        validationIcon.className = 'fas fa-circle-check url-validation-icon url-valid';
+        previewImg.src = url;
+    };
+    testImg.onerror = () => {
+        validationIcon.className = 'fas fa-circle-xmark url-validation-icon url-invalid';
+        if (previewId === 'icon-preview') previewImg.src = 'https://cdn.stellarwa.xyz/files/error-icon.png';
+        else previewImg.src = 'https://cdn.stellarwa.xyz/files/error-banner.png';
+    };
+    testImg.src = url;
+    return true;
+}
+
+async function getBotConfigs(phone) {
+    try {
+        const res = await fetch('/ver-configs', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ phone })
+        });
+        const data = await res.json();
+        
+        if (!res.ok) throw new Error(data.message || 'Error al obtener configuraciones');
+        return data.config;
+    } catch (e) {
+        showNotification('error', 'Error de Sincronización', e.message);
+        return null;
+    }
+}
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    if (sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    } else {
+        sidebar.classList.add('active');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function switchTab(tabId) {
+    ['home', 'create', 'list'].forEach(id => {
+        document.getElementById(`tab-${id}`).classList.remove('active');
+        document.getElementById(`nav-${id}`).classList.remove('active-nav-item');
+    });
+
+    const targetSection = document.getElementById(`tab-${tabId}`);
+    targetSection.classList.add('active');
+
+    const targetNav = document.getElementById(`nav-${tabId}`);
+    targetNav.classList.add('active-nav-item');
+
+    toggleSidebar();
+
+    if (tabId === 'list') loadBots();
+    if (tabId === 'create') {
+        const botTypeSelect = document.getElementById('botType');
+        botTypeSelect.addEventListener('change', function() {
+            const tokenField = document.getElementById('tokenField');
+            if (this.value === 'subbot') {
+                tokenField.classList.add('hidden');
+            } else {
+                tokenField.classList.remove('hidden');
+            }
+        });
+    }
+}
+
+function startCountdown() {
+    let seconds = 45;
+    const timerElement = document.getElementById('timer');
+    countdownInterval = setInterval(() => {
+        seconds--;
+        timerElement.textContent = `Tiempo restante: ${seconds}s`;
+        if (seconds <= 0) {
+            clearInterval(countdownInterval);
+            timerElement.textContent = "Código expirado";
+            document.getElementById('code-display').classList.add('text-gray-500');
+            showNotification('warning', 'Código Expirado', 'Genera un nuevo código para continuar vinculando tu bot');
+        }
+    }, 1000);
+}
+
+async function requestCode() {
+    const input = document.getElementById('phoneNumber');
+    const label = document.getElementById('botLabel');
+    const botType = document.getElementById('botType');
+    const botToken = document.getElementById('botToken');
+    const btn = document.getElementById('btn-generate');
+    const codeArea = document.getElementById('code-area');
+    const codeDisplay = document.getElementById('code-display');
+
+    codeArea.style.display = 'block';
+    codeDisplay.innerText = 'GENERANDO CODIGO...';
+    codeDisplay.classList.remove('text-gray-500');
+
+    const phone = input.value.trim();
+    const phoneDigits = normalizePhoneForPairing(phone);
+    if(phoneDigits.length < 8) {
+        showNotification('warning', 'Número Inválido', 'Ingresa un número válido con código de país');
+        codeArea.style.display = 'none';
+        return;
+    }
+    if(!label.value.trim()) {
+        showNotification('warning', 'Falta Etiqueta', 'Ingresa una etiqueta para el bot');
+        codeArea.style.display = 'none';
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin text-xl"></i> Generando...';
+
+    try {
+        const payload = {
+            phone: phone,
+            label: label.value.trim(),
+            botType: botType.value,
+            token: (botType.value === 'moderador' || botType.value === 'premium') ? botToken.value.trim() : ''
+        };
+
+        const res = await fetch('/start-pairing', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (data.ok || data.connected) {
+            codeDisplay.innerText = data.code || 'CONECTADO EXITOSAMENTE';
+
+            if (countdownInterval) clearInterval(countdownInterval);
+            startCountdown();
+
+            const config = await getBotConfigs(phone);
+            if (config) {
+                let bots = JSON.parse(localStorage.getItem('stellarBots') || '[]');
+                bots.push({
+                    idDigits: phoneDigits,
+                    jid: phoneDigits + "@s.whatsapp.net",
+                    label: label.value.trim(),
+                    botType: botType.value,
+                    createdAt: Date.now(),
+                    updatedAt: Date.now(),
+                    banner: config.banner || 'https://cdn.sockywa.xyz/files/kH2N.jpeg',
+                    icon: config.icon || 'https://cdn.sockywa.xyz/files/RTnq.jpeg',
+                    longName: config.namebot || 'Alya San',
+                    shortName: config.namebot2 || 'Alya',
+                    canal: config.canal || 'https://whatsapp.com/channel/0029VbApwZ9ISTkEBb6ttS3F',
+                    prefix: config.prefijo || '/',
+                    owner: config.owner || 'Oculto por privacidad',
+                    currency: config.currency || 'Coins',
+                    link: config.link || 'https://api.stellarwa.xyz'
+                });
+                localStorage.setItem('stellarBots', JSON.stringify(bots));
+                document.getElementById('bot-count').textContent = bots.length;
+            }
+
+            if (data.connected) {
+                showNotification('success', 'Bot Conectado', 'El bot está listo para usar y sincronizado');
+            } else {
+                showNotification('info', 'Código Generado', 'Vincula en WhatsApp > Dispositivos Vinculados');
+            }
+        } else {
+            showNotification('error', 'Error', data.error || data.message || 'No se pudo generar el código');
+        }
+    } catch (e) {
+        console.log(e);
+        showNotification('error', 'Error de Conexión', `Fallo de conexión con el servidor :: ${e}`);
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Generar Código de Vinculación</span><i class="fas fa-arrow-right text-xl"></i>';
+    }
+}
+
+async function loadBots() {
+    const grid = document.getElementById('bots-grid');
+    grid.innerHTML = ''; // Limpiar la cuadrícula antes de cargar.
+
+    try {
+        let localBots = JSON.parse(localStorage.getItem('stellarBots') || '[]');
+        document.getElementById('bot-count').textContent = localBots.length;
+        
+        if (localBots.length === 0) {
+            grid.innerHTML = `
+            <div class="glass-morphism bot-card">
+                <div class="bot-card-body text-center py-10">
+                    <i class="fas fa-folder-open text-5xl text-gray-500 mb-4"></i>
+                    <h3 class="text-xl text-gray-300 mb-2">No hay Bots Activos</h3>
+                    <p class="text-sm text-gray-500 mb-6">Crea tu primer SubBot.</p>
+                </div>
+            </div>`;
+            return;
+        }
+
+        for (const bot of localBots) {
+            const statusResponse = await fetch(`/bots/status?phone=${bot.idDigits}`);
+            const statusData = await statusResponse.json();
+
+            const lastUpdate = new Date(bot.updatedAt);
+            const formattedDate = `${lastUpdate.toLocaleDateString()} ${lastUpdate.toLocaleTimeString()}`;
+            const isOnline = statusData.ok && statusData.status === 'online';
+
+            grid.innerHTML += `
+            <div class="glass-morphism bot-card">
+                <div class="bot-card-header">
+                    <img src="${bot.banner}" alt="Banner ${bot.label}">
+                    <div class="bot-type-badge">${bot.botType.toUpperCase()}</div>
+                </div>
+                <div class="bot-card-body">
+                    <img src="${bot.icon}" class="bot-avatar" alt="Ícono ${bot.label}">
+                    <h3>${bot.label}</h3>
+                    <p class="bot-phone">+${bot.idDigits}</p>
+                    <p class="last-update">Última sincronización: ${formattedDate}</p>
+                    <div class="bot-tags">
+                        <span class="tag blue">Prefijo: ${bot.prefix}</span>
+                        <span class="tag purple">${bot.currency}</span>
+                        ${isOnline ? '<span class="tag cyan">Online</span>' : '<span class="tag red">Offline</span>'}
+                    </div>
+                    <div class="bot-actions">
+                        ${isOnline ? `<button onclick="openModal('${bot.idDigits}')" class="action-btn edit"><i class="fas fa-gear"></i> Editar</button>` : ''}
+                        <button onclick="deleteBot('${bot.idDigits}')" class="action-btn delete"><i class="fas fa-power-off"></i> Eliminar</button>
+                    </div>
+                </div>
+            </div>`;
+        }
+    } catch (e) {
+        console.error(e);
+        grid.innerHTML = `
+        <div class="glass-morphism bot-card">
+            <div class="bot-card-body text-center py-10">
+                <i class="fas fa-exclamation-triangle text-5xl text-yellow-500 mb-4"></i>
+                <h3 class="text-xl text-gray-300 mb-2">Error al cargar bots</h3>
+                <p class="text-sm text-gray-500 mb-6">Intenta recargar la página o verifica tu conexión a internet</p>
+                <button onclick="loadBots()" class="btn btn-secondary">
+                    <i class="fas fa-sync mr-2"></i> Reintentar Carga
+                </button>
+            </div>
+        </div>`;
+    }
+}
+
+async function deleteBot(idDigits) {
+    const conf = await Swal.fire({
+        title: '¿Eliminar SubBot?',
+        text: "Se eliminará la sesión y toda la configuración guardada de forma permanente.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#FF2E63',
+        cancelButtonColor: '#252836',
+        confirmButtonText: 'Sí, eliminar definitivamente',
+        cancelButtonText: 'Cancelar',
+        background: '#1A1B26',
+        color: '#fff',
+        customClass: {
+            confirmButton: 'px-6 py-2 rounded-lg font-bold',
+            cancelButton: 'px-6 py-2 rounded-lg font-bold'
+        }
+    });
+
+    if (conf.isConfirmed) {
+        try {
+            const res = await fetch('/delete-bot', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    phone: `${idDigits}`
+                })
+            });
+            const data = await res.json();
+
+            let bots = JSON.parse(localStorage.getItem('stellarBots') || '[]');
+            bots = bots.filter(b => b.idDigits !== idDigits);
+            localStorage.setItem('stellarBots', JSON.stringify(bots));
+
+            if (data.ok) {
+                loadBots();
+                showNotification('success', 'Bot Eliminado', 'La sesión y configuración han sido eliminadas');
+            } else {
+                throw new Error(data.error || 'No se pudo eliminar el bot del servidor, pero sí de tu almacenamiento local');
+            }
+        } catch (e) {
+            loadBots();
+            showNotification('warning', 'Eliminación Parcial', e.message);
+        }
+    }
+}
+
+function copyCode(btn) {
+    const code = document.getElementById('code-display').textContent;
+    navigator.clipboard.writeText(code).then(() => {
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check mr-2"></i> Código Copiado';
+        btn.classList.add('bg-stellar-cyan/20');
+        btn.classList.add('text-stellar-cyan');
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.remove('bg-stellar-cyan/20');
+            btn.classList.remove('text-stellar-cyan');
+        }, 2000);
+    });
+}
+
+async function openModal(idDigits) {
+    const modal = document.getElementById('modal-personalize');
+    const bots = JSON.parse(localStorage.getItem('stellarBots') || '[]');
+    const bot = bots.find(b => b.idDigits === idDigits);
+
+    if (!bot) return showNotification('error', 'Error', 'Bot no encontrado');
+
+    const serverConfig = await getBotConfigs(idDigits);
+    if (serverConfig) {
+        const updatedBot = {
+            ...bot,
+            updatedAt: Date.now(),
+            banner: serverConfig.banner || bot.banner,
+            icon: serverConfig.icon || bot.icon,
+            longName: serverConfig.namebot || bot.longName,
+            shortName: serverConfig.namebot2 || bot.shortName,
+            canal: serverConfig.canal || bot.canal,
+            prefix: serverConfig.prefijo || bot.prefix,
+            owner: serverConfig.owner || bot.owner,
+            currency: serverConfig.currency || bot.currency,
+            link: serverConfig.link || bot.link
+        };
+        const updatedBots = bots.map(b => b.idDigits === idDigits ? updatedBot : b);
+        localStorage.setItem('stellarBots', JSON.stringify(updatedBots));
+    }
+
+    document.getElementById('modal-bot-tag').textContent = `ID: ${idDigits.slice(-4)}`;
+    document.getElementById('modal-banner-preview').src = bot.banner;
+    document.getElementById('modal-icon-preview').src = bot.icon;
+    document.getElementById('edit-longName').value = bot.longName;
+    document.getElementById('edit-shortName').value = bot.shortName;
+    document.getElementById('edit-prefix').value = bot.prefix;
+    document.getElementById('edit-owner').value = bot.owner;
+    document.getElementById('edit-canal').value = bot.canal;
+    document.getElementById('edit-currency').value = bot.currency;
+    document.getElementById('edit-link').value = bot.link;
+    document.getElementById('edit-icon-url').value = bot.icon;
+    document.getElementById('edit-banner-url').value = bot.banner;
+
+    validateUrl(document.getElementById('edit-icon-url'), 'icon-preview');
+    validateUrl(document.getElementById('edit-banner-url'), 'banner-preview');
+
+    const lastUpdate = new Date(bot.updatedAt);
+    const formattedDate = `${lastUpdate.toLocaleDateString()} ${lastUpdate.toLocaleTimeString()}`;
+    document.getElementById('last-update').textContent = `Última sincronización: ${formattedDate}`;
+
+    modal.setAttribute('data-bot-id', idDigits);
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    const modal = document.getElementById('modal-personalize');
+    modal.classList.remove('active');
+    setTimeout(() => {
+        document.body.style.overflow = 'auto';
+    }, 300);
+}
+
+async function saveBotConfig() {
+    const idDigits = document.getElementById('modal-personalize').getAttribute('data-bot-id');
+    const bots = JSON.parse(localStorage.getItem('stellarBots') || '[]');
+    const botIndex = bots.findIndex(b => b.idDigits === idDigits);
+
+    if (botIndex === -1) return showNotification('error', 'Error', 'Bot no encontrado');
+
+    const longName = document.getElementById('edit-longName').value.trim();
+    const shortName = document.getElementById('edit-shortName').value.trim();
+    const prefix = document.getElementById('edit-prefix').value.trim();
+    const owner = document.getElementById('edit-owner').value.trim();
+    const canal = document.getElementById('edit-canal').value.trim();
+    const currency = document.getElementById('edit-currency').value.trim();
+    const link = document.getElementById('edit-link').value.trim();
+    const iconUrl = document.getElementById('edit-icon-url').value.trim();
+    const bannerUrl = document.getElementById('edit-banner-url').value.trim();
+
+    if (!longName || !shortName || !prefix) {
+        return showNotification('warning', 'Campos Requeridos', 'Completa nombre largo, nombre corto y prefijo');
+    }
+
+    const isIconValid = validateUrl(document.getElementById('edit-icon-url'), 'icon-preview');
+    const isBannerValid = validateUrl(document.getElementById('edit-banner-url'), 'banner-preview');
+
+    if (!isIconValid || !isBannerValid) {
+        return showNotification('warning', 'URLs Inválidas', 'Verifica las direcciones de las imágenes');
+    }
+
+    const allowedChars = new Set(['.', '-', '#', '!', '/', '+']);
+    const hasInvalidChars = [...prefix].some(char => !allowedChars.has(char));
+
+    if (hasInvalidChars) {
+        return showNotification('error', 'Prefijo Inválido', `El prefijo solo puede contener los siguientes caracteres: ${[...allowedChars].join(', ')}`);
+    }
+
+    const payload = {
+        phone: `+${idDigits}`,
+        longName,
+        shortName,
+        canal,
+        prefix,
+        owner,
+        banner: bannerUrl,
+        icon: iconUrl,
+        currency,
+        link
+    };
+
+    try {
+        const res = await fetch('/edit-bot', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.message || 'Error al guardar en el servidor');
+
+        const updatedBot = {
+            ...bots[botIndex],
+            longName: data.config?.namebot || longName,
+            shortName: data.config?.namebot2 || shortName,
+            prefix: data.config?.prefijo || prefix,
+            owner: data.config?.owner || owner,
+            canal: data.config?.canal || canal,
+            currency: data.config?.currency || currency,
+            link: data.config?.link || link,
+            icon: data.config?.icon || iconUrl,
+            banner: data.config?.banner || bannerUrl,
+            updatedAt: Date.now()
+        };
+
+        bots[botIndex] = updatedBot;
+        localStorage.setItem('stellarBots', JSON.stringify(bots));
+
+        loadBots();
+        closeModal();
+        showNotification('success', 'Configuración Guardada', 'Cambios aplicados y sincronizados con el servidor');
+    } catch (e) {
+        const updatedBot = {
+            ...bots[botIndex],
+            longName,
+            shortName,
+            prefix,
+            owner,
+            canal,
+            currency,
+            link,
+            icon: iconUrl,
+            banner: bannerUrl,
+            updatedAt: Date.now()
+        };
+
+        bots[botIndex] = updatedBot;
+        localStorage.setItem('stellarBots', JSON.stringify(bots));
+
+        loadBots();
+        closeModal();
+        showNotification('warning', 'Guardado Parcial', 'Cambios guardados localmente, pero no se pudo sincronizar con el servidor: ' + e.message);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (typeof particlesJS !== 'undefined') {
+        particlesJS('particles-container', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: '#ffffff' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.1, random: true },
+                size: { value: 3, random: true },
+                line_linked: { enable: true, distance: 150, color: '#ffffff', opacity: 0.1, width: 1 },
+                move: { enable: true, speed: 1, direction: 'none', random: true, straight: false, out_mode: 'out', bounce: false }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: { enable: true, mode: 'grab' },
+                    onclick: { enable: true, mode: 'push' },
+                    resize: true
+                },
+                modes: {
+                    grab: { distance: 140, line_linked: { opacity: 0.3 } },
+                    push: { particles_nb: 4 }
+                }
+            },
+            retina_detect: true
+        });
+    }
+
+    loadBots();
+
+    document.getElementById('modal-personalize').addEventListener('click', (e) => {
+        if (e.target === document.getElementById('modal-personalize')) closeModal();
+    });
+
+    window.addEventListener('scroll', () => {
+        const nav = document.querySelector('.nav-glass');
+        if (window.scrollY > 50) {
+            nav.classList.add('shadow-stellar-glow');
+            nav.classList.remove('shadow-lg');
+        } else {
+            nav.classList.remove('shadow-stellar-glow');
+            nav.classList.add('shadow-lg');
+        }
+    });
+
+    const botTypeSelect = document.getElementById('botType');
+    const tokenField = document.getElementById('tokenField');
+    botTypeSelect.addEventListener('change', function() {
+        if (this.value === 'moderador' || this.value === 'premium') {
+            tokenField.classList.remove('hidden');
+        } else {
+            tokenField.classList.add('hidden');
+        }
+    });
+
+    document.getElementById('code-area').style.display = 'none';
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+</body>
+</html>
