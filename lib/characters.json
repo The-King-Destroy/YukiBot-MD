@@ -17944,6 +17944,13 @@
         "gender": "Mujer",
         "tags": ["vulpisfoglia_(arknights)"],
         "value": 100
+      },
+      {
+        "id": "0000078",
+        "name": "Ldybug",
+        "gender": "Mujer",
+        "tags": ["ladybug_(miraculous_ladybug)"],
+        "value": 100
       }
     ]
   }
